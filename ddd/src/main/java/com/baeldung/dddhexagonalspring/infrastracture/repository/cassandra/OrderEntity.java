@@ -38,21 +38,22 @@ public class OrderEntity {
             .stream()
             .map(OrderItemEntity::new)
             .collect(Collectors.toList());
-
     }
 
     public Order toOrder() {
         List<OrderItem> orderItems = orderItemEntities.stream()
             .map(OrderItemEntity::toOrderItem)
             .collect(Collectors.toList());
+
         List<Product> namelessProducts = orderItems.stream()
             .map(orderItem -> new Product(orderItem.getProductId(), orderItem.getPrice(), ""))
             .collect(Collectors.toList());
+
         Order order = new Order(id, namelessProducts.remove(0));
         namelessProducts.forEach(product -> order.addOrder(product));
-        if (status == OrderStatus.COMPLETED) {
-            order.complete();
-        }
+
+        if (status == OrderStatus.COMPLETED) order.complete();
+        
         return order;
     }
 
